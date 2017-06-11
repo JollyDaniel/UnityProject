@@ -34,8 +34,9 @@ public class LevelControler : MonoBehaviour {
 	}
 
 	public void RabitDeath (Rabit rabit) {
-		--lifes;
 		//tmp = rabit;
+		LifesUI.lifesUI.OnDeathUI(lifes);
+		--lifes;
 		rabit.transform.position = this.startPos;
 	}
 
@@ -49,6 +50,7 @@ public class LevelControler : MonoBehaviour {
 
 	public void addFruits(int n) {
 		fruits += n;
+		FruitsUI.fruitsUI.FruitCollect(fruits);
 	}
 
 	public void addCrystals(int n) {
@@ -67,6 +69,7 @@ public class LevelControler : MonoBehaviour {
 	public int lifes = 3;
 	public int coins = 0;
 	public int fruits = 0;
+	//public int fruitsAll = 0;
 	public int crystals = 0;
 	private bool isBig = false;
 }

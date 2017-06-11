@@ -17,11 +17,11 @@ public class CoinsLabel : MonoBehaviour
 	{
 		string temp = "";
 		if (nCoins < 10)
-			temp = "00" + nCoins;
+			temp = "000" + nCoins;
 		else if (nCoins < 100)
-			temp = "0" + nCoins;
+			temp = "00" + nCoins;
 		else if (nCoins < 10000)
-			temp = "" + nCoins;
+			temp = "0" + nCoins;
 		Text.text = temp;
 	}
 
