@@ -64,9 +64,9 @@ public class LevelControler : MonoBehaviour {
 	//float wait;
 	//bool dying;
 	private Vector3 startPos;
-	private int lifes = 3;
-	private int coins = 0;
-	private int fruits = 0;
-	private int crystals = 0;
+	public int lifes = 3;
+	public int coins = 0;
+	public int fruits = 0;
+	public int crystals = 0;
 	private bool isBig = false;
 }

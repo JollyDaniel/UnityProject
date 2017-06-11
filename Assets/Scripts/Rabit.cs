@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Rabit : MonoBehaviour {
 
+	public static Rabit rabit;
 	public float speed = 5;
 	Rigidbody2D rBody = null;
 	SpriteRenderer sr = null;
@@ -11,6 +12,7 @@ public class Rabit : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		rabit = this;
 		rBody = GetComponent<Rigidbody2D>();
 		sr = GetComponent<SpriteRenderer>();
 		LevelControler.current.setStartPosition (transform.position);
@@ -130,7 +132,7 @@ public class Rabit : MonoBehaviour {
 	float wait;
 	bool isGrounded;
 	bool isJumpActive;
-	bool isBig;
+	public bool isBig;
 	bool getingBiger;
 	bool getingSmaller;
 	bool getingDead;
@@ -138,6 +140,4 @@ public class Rabit : MonoBehaviour {
 	public float MaxJumpTime = 2f;
 	public float JumpSpeed = 2f;
 }
-
-
 // edit - project settings - physics 2D
