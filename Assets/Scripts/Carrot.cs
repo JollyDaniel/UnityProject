@@ -5,7 +5,7 @@ using UnityEngine;
 public class Carrot : Collectable
 {
 
-	public Vector3 Speed = new Vector3(2.0f, 0.0f, 0.0f);
+	public Vector3 Speed = new Vector3(5.0f, 0.0f, 0.0f);
 
 	private Rigidbody2D Body;
 	private SpriteRenderer Spriter;
@@ -45,6 +45,10 @@ public class Carrot : Collectable
 		}
 	}
 
-
+    protected override void onRabitHit(Rabit rabit)
+    {
+        LevelControler.current.RabitDeath(rabit);
+        CollectedHide();
+    }
 
 }

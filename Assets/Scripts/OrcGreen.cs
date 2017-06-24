@@ -95,7 +95,7 @@ public class OrcGreen: MonoBehaviour {
 
 	private bool IsDirectlyUnderRabit() {
 		return Rabit.rabit.transform.position.y > transform.position.y
-			&& Mathf.Abs(Rabit.rabit.transform.position.y - this.transform.position.y) < 2.0f;
+			&& Mathf.Abs(Rabit.rabit.transform.position.y - this.transform.position.y) < 2.3f;
 	}
 
 	private void BumpRabit() {

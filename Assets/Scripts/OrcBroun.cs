@@ -17,7 +17,8 @@ public class OrcBroun : MonoBehaviour
 	private Rigidbody2D RigidBody;
 	public float speed = 1f;
 	public float runSpeed = 2.5f;
-	public float hitRange = 2f;
+    public float bulletDelay = 2.0f;
+	public float hitRange = 2.0f;
 	public Vector3 destVector = Vector3.one;
 
 	void Start()
@@ -39,13 +40,16 @@ public class OrcBroun : MonoBehaviour
 		Vector3 rabbitPosition = Rabit.rabit.transform.position;
 		Vector3 orcPosition = this.transform.position;
 
-		if ((rabbitPosition.x > pointA.x && rabbitPosition.x < pointB.x))/* ||
+        if ((rabbitPosition.x > pointA.x && rabbitPosition.x < pointB.x))/* ||
 		    (rabbitPosition.x > pointB.x && rabbitPosition.x < pointA.x))*/
-			mode = Mode.Attack;
-		else if ((mode == Mode.GoToA || mode == Mode.Attack) && HasArrived(orcPosition, pointA))
-			mode = Mode.GoToB;
-		else if ((mode == Mode.GoToB || mode == Mode.Attack) && HasArrived(orcPosition, pointB))
-			mode = Mode.GoToA;
+        {
+            prevMode = mode == Mode.Attack ? prevMode : mode;
+            mode = Mode.Attack;
+        }
+        else if ((mode == Mode.GoToA || mode == Mode.Attack) && HasArrived(orcPosition, pointA))
+            mode = Mode.GoToB;
+        else if ((mode == Mode.GoToB || mode == Mode.Attack) && HasArrived(orcPosition, pointB))
+            mode = Mode.GoToA;
 		Run();
 		if (mode == Mode.Attack && IsCloseToRabit())
 		{
@@ -57,9 +61,26 @@ public class OrcBroun : MonoBehaviour
 				waitTime = 0;
 			}
 		}
-		//else if (rabbitPosition.y <= transform.position.y + 3)
-		//	Attack(Rabit.rabit);
-		StartCoroutine(Die());
+
+        if (!IsShooting && rabbitPosition.x <= transform.position.x + 6.0f)
+        {
+            Attack(Rabit.rabit);
+        }
+
+        if (Time.time - BulletAppear > bulletDelay)
+        {
+            if (HasArrived(orcPosition, pointB))
+                mode = prevMode = Mode.GoToA;
+            else if (HasArrived(orcPosition, pointA))
+                mode = prevMode = Mode.GoToB;
+            else
+                mode = prevMode;
+            IsShooting = false;
+            BulletAppear = .0f;
+            animator.SetBool("Attack", false);
+        }
+
+        StartCoroutine(Die());
 	}
 
 	float getDirection()
@@ -82,7 +103,7 @@ public class OrcBroun : MonoBehaviour
 	{
 		float direction = this.getDirection();
 
-		if (direction != .0f)
+		if (direction != .0f && mode != Mode.Attack)
 			spriter.flipX = direction > 0;
 		if (Mathf.Abs(direction) > 0)
 		{
@@ -108,7 +129,7 @@ public class OrcBroun : MonoBehaviour
 	private bool IsDirectlyUnderRabit()
 	{
 		return Rabit.rabit.transform.position.y > transform.position.y
-			&& Mathf.Abs(Rabit.rabit.transform.position.y - this.transform.position.y) < 2.0f;
+			&& Mathf.Abs(Rabit.rabit.transform.position.y - this.transform.position.y) < 2.3f;
 	}
 
 	private void BumpRabit()
@@ -152,34 +173,40 @@ public class OrcBroun : MonoBehaviour
 
 	public void Attack(Rabit rabbit)
 	{
-
+        IsShooting = true;
 		BulletAppear = Time.time;
 		RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
 
 		float direction = GetBulletDirection();
+        Debug.Log(direction);
 
 		if (direction < 0)
 		{
 			Sprite.flipX = false;
-		}
+            Debug.Log("left");
+        }
 		else {
 			Sprite.flipX = true;
-		}
+            Debug.Log("right");
+        }
 
 		LaunchCarrot(direction);
-		this.Animator.SetTrigger("attack");
-	}
+		this.Animator.SetTrigger("Attack");
+        RigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+    }
 	private const float DEATH_HEIGHT = 1;
 	private float waitTime;
 	public Mode mode = Mode.GoToB;
+    public Mode prevMode = Mode.GoToA;
 	private Rigidbody2D body;
 	private SpriteRenderer spriter;
 	private Animator animator;
 	public Vector3 pointA;
 	public Vector3 pointB;
-		private float BulletAppear;
+	private float BulletAppear;
 	private bool IsWalking;
 	private bool IsDead;
-	private bool IsShooting;
+	public bool IsShooting;
 	private bool IsAttacking;
 }
